@@ -60,7 +60,7 @@ echo "Signing the requested certificate"
 openssl x509 -req -in "$CN.csr" -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out "$CN.crt" -days 365 -sha256
 rm "$CN.csr"
 
-echo "- validating that the CSR and key match"
+echo "- validating that the certificate and key match"
 #validation steps
 CRTDGS=$(openssl x509 -noout -modulus -in "$CN.crt" | openssl sha256)
 
