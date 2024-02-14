@@ -41,7 +41,7 @@ CSRDGS=$(openssl req -noout -modulus -in "$CN.csr" | openssl sha256)
 
 if [[ "$KEYDGS" == "$CSRDGS" ]]
 then
-echo "  signing request and key match... proceeding with certificate creation"
+echo "  signing request and key match... can proceed with certificate creation"
 echo "    $KEYDGS"
 echo "    $CSRDGS"
 else
@@ -82,7 +82,7 @@ P12PASS=$(openssl rand -hex 8)
 openssl pkcs12 -export -out "$CN.p12" -in "$CN.crt" -inkey "$CN.key" -passout pass:"$P12PASS"
 echo "$P12PASS" > "$CN.p12-pass.txt"
 
-DIR=${CN//[-._]/}
+DIR=certbundle
 echo "Certificate creation completed; certificate and key can be found in the $DIR folder"
 mkdir $DIR
 mv "$CN.key" $DIR
