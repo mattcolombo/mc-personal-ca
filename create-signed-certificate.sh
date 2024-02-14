@@ -28,7 +28,6 @@ L="Leics"
 O="$1"
 OU="$2"
 CN="$3"
-
 SUBJ="/C=$C/ST=$ST/L=$L/O=$O/OU=$OU/CN=$CN"
 
 echo "Creating the certificate private key and signing request"
@@ -53,7 +52,9 @@ rm "$CN.csr"
 exit 1
 fi
 
+echo " "
 echo "---------"
+echo " "
 
 echo "Signing the requested certificate"
 
