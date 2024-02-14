@@ -27,9 +27,15 @@ jobs:
         run: |
           echo $CA_BASE64 | base64 --decode > rootCA.crt
           echo $CA_PKEY_BASE64 | base64 --decode > rootCA.key
-          echo "Showing certificate"
-          cat rootCA.crt
-          echo "Showing pkey"
-          cat rootCA.key
-          echo "Checking files present here"
-          ls -la
+      - name: Add execute permission to script
+        run: chmod +x create-signed-certificate.sh
+      - name: Create signed certificate
+        run: create-signed-certificate.sh ${{ inputs.org }} ${{ inputs.orgunit }} ${{ inputs.cn }}
+      - name: Create archive for upload
+        env:
+          CN: ${{ inputs.cn }}
+        run: |
+          DIR=${CN//[-._]/}
+          zip -r $DIR.zip $DIR
+          ls -la 
+          ls -la ./$DIR/
