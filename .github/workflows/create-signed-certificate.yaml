@@ -30,7 +30,7 @@ jobs:
       - name: Add execute permission to script
         run: chmod +x create-signed-certificate.sh
       - name: Create signed certificate
-        run: create-signed-certificate.sh ${{ inputs.org }} ${{ inputs.orgunit }} ${{ inputs.cn }}
+        run: ./create-signed-certificate.sh ${{ inputs.org }} ${{ inputs.orgunit }} ${{ inputs.cn }}
       - name: Create archive for upload
         env:
           CN: ${{ inputs.cn }}
