@@ -1,0 +1,32 @@
+name: Signed Certificate Creation
+run-name: Creating a certificate signed by my own CA
+on: 
+  workflow_dispatch:
+    inputs:
+      org:
+        description: 'Organization'
+        required: true
+        default: 'MCCORP'
+      orgunit:
+        description: 'Organizational Unit'
+        required: true
+        default: 'IT'
+      cn:
+        description: 'Common Name'
+        required: true
+        default: 'test.example.com'
+jobs:
+  Retrieve-CA:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieve the CA and key and decode to files
+        env:
+          CA_BASE64: ${{ secrets.ROOT_CA }}
+          CA_PKEY_BASE64: ${{ secrets.ROOT_CA_KEY }}
+        run: |
+          echo $CA_BASE64 | base64 --decode > rootCA.crt
+          echo $CA_PKEY_BASE64 | base64 --decode > rootCA.key
+          echo "Showing certificate"
+          cat rootCA.crt
+          echo "Showing pkey"
+          cat rootCA.key
