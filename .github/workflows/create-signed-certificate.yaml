@@ -36,6 +36,11 @@ jobs:
           CN: ${{ inputs.cn }}
         run: |
           DIR=${CN//[-._]/}
-          zip -r $DIR.zip $DIR
+          zip -r certbundle.zip $DIR
           ls -la 
           ls -la ./$DIR/
+      - name: Upload certificate bundle as artifact (MUST be downloaded within 2 days)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.cn }}-bundle
+          path: ./certbundle.zip
