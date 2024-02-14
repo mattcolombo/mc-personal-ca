@@ -16,9 +16,10 @@ on:
         required: true
         default: 'test.example.com'
 jobs:
-  Retrieve-CA:
+  Create-Upload-Certificate:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Retrieve the CA and key and decode to files
         env:
           CA_BASE64: ${{ secrets.ROOT_CA }}
