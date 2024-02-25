@@ -7,7 +7,7 @@ Below is a sample GitHub action used to produce automatically a set of certifica
 Before starting we need to ensure to perform a few steps:
 
 * Generate a personal rootCA (certificate and key) following this guide [Create your own Certificate Authority - Medium](https://priyalwalpita.medium.com/create-your-own-certificate-authority-47f49d0ba086) or this guide [Generate an Azure Application Gateway self-signed certificate with a custom root CA - MSFT Learn](https://learn.microsoft.com/en-us/azure/application-gateway/self-signed-certificates)
-* Modify the script [create-signed-certificate.sh](/create-signed-certificate.sh) 25-27 to enter the default `Country`, `State` and `Locality` for the certificate (these could but don't necessarily have to match the ones in the Root CA generated before)
+* Modify the script [create-signed-certificate.sh](/create-signed-certificate.sh) 25-27 to enter your default `Country`, `State` and `Locality` for the certificate (these could but don't necessarily have to match the ones in the Root CA generated before)
 * Use base64 to encode the root certificate and private key, and add them to GitHub secrets called `ROOT_CA` and `ROOT_CA_KEY`; if the names are changed, be sure to adjust them in the pipeline code below
 
 ## GitHub action code
