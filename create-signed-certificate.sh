@@ -1,7 +1,7 @@
 #!/bin/bash
 
 print-usage () {
-    echo "Usage: create-signed-certificate.sh <organization> <org unit> <common name>"
+    echo "Usage: create-signed-certificate.sh <common_name> <config_file> <extensions_file> <rootCAkey_password>"
 }
 
 # making sure that keytool and openssl are installed
@@ -22,16 +22,13 @@ if [[ "$#" -ne 3 ]]; then
     exit 1
 fi
 
-C="GB"
-ST="Mids"
-L="Leics"
-O="$1"
-OU="$2"
-CN="$3"
-SUBJ="/C=$C/ST=$ST/L=$L/O=$O/OU=$OU/CN=$CN"
+CN="$1"
+CONFIG="$2"
+EXT="$3"
+KEYPASS="$4"
 
 echo "Creating the certificate private key and signing request"
-openssl req -nodes -newkey rsa:2048 -keyout "$CN.key" -out "$CN.csr" -subj "$SUBJ"
+openssl req -new -out "$CN.csr" -newkey rsa:4096 -nodes -sha256 -keyout "$CN.key" -config "$CONFIG"
 
 echo "- validating that the CSR and key match"
 #validation steps
@@ -58,7 +55,7 @@ echo " "
 
 echo "Signing the requested certificate"
 
-openssl x509 -req -in "$CN.csr" -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out "$CN.crt" -days 365 -sha256
+openssl x509 -req -in "$CN.csr" -CA rootCAnew.crt -CAkey rootCAnew.key -passin "pass:$KEYPASS" -CAcreateserial -out "$CN.crt" -days 365 -sha256 -extfile v3.ext
 rm "$CN.csr"
 
 echo "- validating that the certificate and key match"
