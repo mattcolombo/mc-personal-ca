@@ -16,7 +16,7 @@ check-commands () {
 check-commands openssl
 
 # checking that the number of arguments is the correct one. Printing usage if not
-if [[ "$#" -ne 3 ]]; then
+if [[ "$#" -ne 4 ]]; then
     echo "Illegal number of parameters"
     print-usage
     exit 1
@@ -55,7 +55,7 @@ echo " "
 
 echo "Signing the requested certificate"
 
-openssl x509 -req -in "$CN.csr" -CA rootCAnew.crt -CAkey rootCAnew.key -passin "pass:$KEYPASS" -CAcreateserial -out "$CN.crt" -days 365 -sha256 -extfile v3.ext
+openssl x509 -req -in "$CN.csr" -CA rootCA.crt -CAkey rootCA.key -passin "pass:$KEYPASS" -CAcreateserial -out "$CN.crt" -days 365 -sha256 -extfile v3.ext
 rm "$CN.csr"
 
 echo "- validating that the certificate and key match"
