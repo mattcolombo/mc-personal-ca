@@ -17,8 +17,8 @@ parameters:
   type: object
   displayName: "Subject Alternative Names [SANs]"
   default:
-  - "*.example.com"
-  - "*.test.example.com"
+  - '*.example.com'
+  - '*.test.example.com'
 
 ## Here we recover the secure vars and files for them to be available in the pipeline
 
