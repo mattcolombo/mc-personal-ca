@@ -1,7 +1,5 @@
 # don't commit CA files
 root*
-req.conf
-v3.ext
 
 # don't commit generated assets
 certbundle

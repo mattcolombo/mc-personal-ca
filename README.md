@@ -4,9 +4,15 @@ This repository contains the scripts and pipelines necessary to create certifica
 
 ## Creating a personal Certificate Authority
 
-Instructions on how to create your very own personal Certificate Authority can be found either at this Medium post [Create your own Certificate Authority - Medium](https://priyalwalpita.medium.com/create-your-own-certificate-authority-47f49d0ba086) or this guide from Microsoft [Generate an Azure Application Gateway self-signed certificate with a custom root CA - MSFT Learn](https://learn.microsoft.com/en-us/azure/application-gateway/self-signed-certificates). I followed the first one, so I cannot vouch for the correctness of the second, but they are pretty much the same thing anyway so either should work fine.
+Instructions on how to create your very own personal Certificate Authority can be found either at this Medium post [Create your own Certificate Authority - Medium](https://priyalwalpita.medium.com/create-your-own-certificate-authority-47f49d0ba086) or this guide from Microsoft [Generate an Azure Application Gateway self-signed certificate with a custom root CA - MSFT Learn](https://learn.microsoft.com/en-us/azure/application-gateway/self-signed-certificates). THese however are quite simplified methods, which do not allow to easily leverage the more powerful operations available for certificates like using Subject Alternative Names.
 
-## How to generate certificates manually
+A more complete way to become a CA can be found in this excellent [Stackoverflow article](https://stackoverflow.com/questions/21297139/how-do-you-sign-a-certificate-signing-request-with-your-certification-authority/21340898#21340898). All that is seen in this repository was done following the instructions explained there.
+
+## Creating the CA root certificate and private key
+
+TBC
+
+## How to generate certificates manually - TO BE FIXED
 
 To run the certificate generation manually (once the root certificate and key have been generated as per the instructions in the previous section), simply ensure you have the script [create-signed-certificate.sh](./create-signed-certificate.sh) in the same folder as the root certificate and relative private key. This folder needs to be accessible by `bash`.
 
@@ -33,8 +39,3 @@ The script will create a folder called `certbundle` that contains the following 
 My own personal automation is hosted in a private Org in Azure DevOps. That is because I generally prefer ADO Pipelines over GitHub Actions (I find them more flexible and powerful; also I am more familiar with them). For an example of how a pipeline there could be set up, please refer to the pipeline file `create-signed-certificate.yaml` in the `.ado` folder.
 
 The same automation can also be implemented easily elsewhere since most of the logic is self-contained in a script. This means it could be run manually (as described above), or it could be automated in any tool one could desire, as long as said tool have the capability to run a bash script. An example of how this could look in GitHub Actions is provided in [this document](./doc/GH-Actions.md).
-
-## Adding SANs to the cert
-
-https://alexanderzeitler.com/articles/Fixing-Chrome-missing_subjectAltName-selfsigned-cert-openssl/ -- currently used
-https://stackoverflow.com/questions/21297139/how-do-you-sign-a-certificate-signing-request-with-your-certification-authority/21340898#21340898 -- need to be checked 

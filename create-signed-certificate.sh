@@ -1,7 +1,7 @@
 #!/bin/bash
 
 print-usage () {
-    echo "Usage: create-signed-certificate.sh <common_name> <config_file> <extensions_file> <rootCAkey_password>"
+    echo "Usage: create-signed-certificate.sh <common_name> <rootCAkey_password>"
 }
 
 # making sure that keytool and openssl are installed
@@ -16,19 +16,17 @@ check-commands () {
 check-commands openssl
 
 # checking that the number of arguments is the correct one. Printing usage if not
-if [[ "$#" -ne 4 ]]; then
+if [[ "$#" -ne 2 ]]; then
     echo "Illegal number of parameters"
     print-usage
     exit 1
 fi
 
 CN="$1"
-CONFIG="$2"
-EXT="$3"
-KEYPASS="$4"
+KEYPASS="$2"
 
 echo "Creating the certificate private key and signing request"
-openssl req -new -out "$CN.csr" -newkey rsa:4096 -nodes -sha256 -keyout "$CN.key" -config "$CONFIG"
+openssl req -batch -config ./openssl-srv.cnf -newkey rsa:2048 -sha256 -nodes -out "$CN.csr" -outform PEM
 
 echo "- validating that the CSR and key match"
 #validation steps
@@ -55,7 +53,7 @@ echo " "
 
 echo "Signing the requested certificate"
 
-openssl x509 -req -in "$CN.csr" -CA rootCA.crt -CAkey rootCA.key -passin "pass:$KEYPASS" -CAcreateserial -out "$CN.crt" -days 365 -sha256 -extfile v3.ext
+openssl ca -batch -config openssl-ca.cnf -policy signing_policy -extensions signing_req -passin "pass:$KEYPASS" -out "$CN.crt" -notext -rand_serial -infiles "$CN.csr"
 rm "$CN.csr"
 
 echo "- validating that the certificate and key match"
@@ -87,3 +85,4 @@ mv "$CN.key" $DIR
 mv "$CN.crt" $DIR
 mv "$CN.p12" $DIR
 mv "$CN.p12-pass.txt" $DIR
+rm *.pem
