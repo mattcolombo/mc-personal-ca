@@ -2,6 +2,24 @@
 
 This repository contains the scripts and pipelines necessary to create certificates signed by my own personal CA, which is trusted by absolutely no one!
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Creating a personal Certificate Authority
 
 Instructions on how to create your very own personal Certificate Authority can be found either at this Medium post [Create your own Certificate Authority - Medium](https://priyalwalpita.medium.com/create-your-own-certificate-authority-47f49d0ba086) or this guide from Microsoft [Generate an Azure Application Gateway self-signed certificate with a custom root CA - MSFT Learn](https://learn.microsoft.com/en-us/azure/application-gateway/self-signed-certificates). THese however are quite simplified methods, which do not allow to easily leverage the more powerful operations available for certificates like using Subject Alternative Names.

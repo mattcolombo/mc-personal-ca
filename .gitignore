@@ -1,5 +1,7 @@
 # don't commit CA files
-root*
+rootCA.crt
+rootCA.key
+rootCA-keypass.txt
 
 # don't commit generated assets
 certbundle
