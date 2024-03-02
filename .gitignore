@@ -8,7 +8,7 @@ rootCA/openssl-ca.cnf
 openssl-srv*
 
 # don't commit generated assets
-certbundle
+certbundle*
 
 #don't commit db assets aside from the required ones
 db/index.txt.*

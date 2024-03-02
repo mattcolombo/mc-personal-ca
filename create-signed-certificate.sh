@@ -79,7 +79,7 @@ P12PASS=$(openssl rand -hex 8)
 openssl pkcs12 -export -out "$CN.p12" -in "$CN.crt" -inkey "$CN.key" -passout pass:"$P12PASS"
 echo "$P12PASS" > "$CN.p12-pass.txt"
 
-DIR=certbundle
+DIR="certbundle-$(echo $CN | tr -d '.')"
 echo "Certificate creation completed; certificate and key can be found in the $DIR folder"
 mkdir $DIR
 mv "$CN.key" $DIR
