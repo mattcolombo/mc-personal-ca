@@ -2,9 +2,9 @@
 
 This repository contains the scripts and pipelines necessary to create certificates signed by my own personal CA, which is trusted by absolutely no one!
 
-## How to become a Certifying Authority
+## How to become a Certificate Authority
 
-Becoming a Certifying Authority (CA) could not be more simple: all we need is to generate a self-signed certificate with a strong key (ideally password protected, since it will be used to sign all the other certificates) and then convince the world to trust you as a Certifying Authority. The second part is by far the most difficult part. 
+Becoming a Certificate Authority (CA) could not be more simple: all we need is to generate a self-signed certificate with a strong key (ideally password protected, since it will be used to sign all the other certificates) and then convince the world to trust you as a Certificate Authority. The second part is by far the most difficult part. 
 
 Since convincing the world about anything, leave alone trusting some random person, is quite complicated and very tiring we will discuss here only the first part. That is actually relatively simple. Everything that was done (and documented) here is based on this quite excellent [guide](https://stackoverflow.com/questions/21297139/how-do-you-sign-a-certificate-signing-request-with-your-certification-authority/21340898#21340898) authored by [Chad Killingsworth](https://stackoverflow.com/users/1211524/chad-killingsworth) found on Stackoverflow. This is by far the most complete guide I was able to find. Some more simplified versions of the same process can be found in this Medium post [Create your own Certificate Authority - Medium](https://priyalwalpita.medium.com/create-your-own-certificate-authority-47f49d0ba086) or this guide from Microsoft [Generate an Azure Application Gateway self-signed certificate with a custom root CA - MSFT Learn](https://learn.microsoft.com/en-us/azure/application-gateway/self-signed-certificates). These however are quite simplified methods, and generate V1 SSL certificates, which do not include some of the more powerful features that are present in V3 SSL certificates, such as for example the use of Subject Alternative Names.
 
@@ -15,7 +15,24 @@ In the rest of this document we will explore how we can generate (manually, sinc
 
 ## Generating the root certificate and key
 
-[this script](./rootCA/create-local-ca.sh) using [this config file](./rootCA/openssl-ca.cnf) which must be the same as the one in the main folder.
+Generation of a root certificate and the related private key, which are essential to become a CA, is quite simple. Notice that it is quite important for the private key to be a good length and password protected, since that is the one that protects your identity as a CA.
+
+The script [create-local-ca.sh](./rootCA/create-local-ca.sh) found in the [rootCA](./rootCA/) folder takes these two facts into consideration when creating the rootCA. The key is created with a length of 4096 bits (unlike the more usual 2048 used for most certificates) and is password protected, with the password generated randomly.
+
+To create your very own root certificate and key, simply follow these steps:
+
+* in the [rootCA](./rootCA/) folder, make a copy of the [tmpl-openssl-ca.cnf](./rootCA/tmpl-openssl-ca.cnf) file and name it `openssl-ca.cnf`;
+* open the newly created `openssl-ca.cnf` file and change the default in the `[ ca_distinguished_name ]`. The values to change are the ones surrounded by `##`;
+* run the [create-local-ca.sh](./rootCA/create-local-ca.sh). 
+
+The output of the script is going to all be located in the [rootCA](./rootCA/):
+
+* the root certificate `rootCA.crt`
+* the private key `rootCA.key`
+* a `txt` file with the passphrase for the private key, which will need to be used to sign certificates from here onwards.
+
+> [!TIP]
+> It is a good idea to keep the `openssl-ca.cnf` file created in the first step for the future: this is the reference file for your own CA, and will also be used when signing new certificates. Note that even if you are using the files in this repo also as a repo (e.g. in case you forked the repo) the `.gitignore` file is already taking care to not commit the root certificates keys, passwords and the specific config files (such as `openssl-ca.cnf`) used in your own specific CA. So you are safe to keep all of it there.
 
 ## Generating signed certificates
 

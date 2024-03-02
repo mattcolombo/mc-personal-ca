@@ -5,7 +5,7 @@ rootCA/rootCA-keypass.txt
 rootCA/openssl-ca.cnf
 
 # don't commit sample CFN files
-openssl-srv-*
+openssl-srv*
 
 # don't commit generated assets
 certbundle
