@@ -33,25 +33,25 @@ string_mask        = utf8only
 ####################################################################
 [ ca_distinguished_name ]
 countryName         = Country Name (2 letter code)
-countryName_default = GB
+countryName_default = ##Some-Country##
 
 stateOrProvinceName         = State or Province Name (full name)
-stateOrProvinceName_default = Midlands
+stateOrProvinceName_default = ##Some-State##
 
 localityName         = Locality Name (eg, city)
-localityName_default = Leics
+localityName_default = ##Some-Locality##
 
 organizationName         = Organization Name (eg, company)
-organizationName_default = MC Local Org
+organizationName_default = ##CA-Org-Name##
 
 organizationalUnitName         = Organizational Unit (eg, division)
-organizationalUnitName_default = IT Security
+organizationalUnitName_default = ##CA-Org-Unit-Name##
 
 commonName         = Common Name (e.g. server FQDN or YOUR name)
-commonName_default = MC Local CA
+commonName_default = ##CA-Name##
 
 emailAddress         = Email Address
-emailAddress_default = mattcolombo.dev@gmail.com
+emailAddress_default = ##Some-Email##
 
 ####################################################################
 [ ca_extensions ]
