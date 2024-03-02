@@ -1,7 +1,8 @@
 # don't commit CA files
-rootCA.crt
-rootCA.key
-rootCA-keypass.txt
+rootCA/rootCA.crt
+rootCA/rootCA.key
+rootCA/rootCA-keypass.txt
+rootCA/openssl-ca.cnf
 
 # don't commit sample CFN files
 openssl-srv-*
