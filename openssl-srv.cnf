@@ -43,3 +43,4 @@ nsComment            = "OpenSSL Generated Certificate"
 
 # add below the list of alternate names as 
 # DNS.# = <hostname>
+DNS.1 = ##CN##

@@ -14,8 +14,8 @@ email_in_dn     = no            # Don't concat the email in the DN
 copy_extensions = copy          # Required to copy SANs from CSR to cert
 
 base_dir      = .
-certificate   = $base_dir/rootCA.crt      # The CA certificate
-private_key   = $base_dir/rootCA.key      # The CA private key
+certificate   = $base_dir/rootCA/rootCA.crt      # The CA certificate
+private_key   = $base_dir/rootCA/rootCA.key      # The CA private key
 new_certs_dir = $base_dir                 # Location for new certs after signing
 database      = $base_dir/db/index.txt    # Database index file
 serial        = $base_dir/db/serial.txt   # The current serial number
