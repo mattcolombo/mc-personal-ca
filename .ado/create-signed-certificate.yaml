@@ -28,7 +28,24 @@ stages:
   pool:
     vmImage: ubuntu-latest
   jobs:
-  - template: /business_templates/ado-tl-release-confluent-operator-job.yaml
-    parameters: 
-      cfltEnv: ${{ parameters.cfltEnv }}
-      sourceDir: ${{ parameters.sourceDir }}
+  - job: sign-certificate 
+    diplayName: Sign and Upload Certificate
+    variables:
+    - group: rootCA-vars
+    - name: rootCAkeypass
+      value: $[rootCA-vars.rootCAkeypass]
+    steps:
+    - script: ls la
+      displayName: 'Checking contents of folder'
+    - task: DownloadSecureFile@1
+      name: cacrt
+      displayName: 'Download CA root certificate'
+      inputs:
+        secureFile: 'rootCA.crt'
+    - task: DownloadSecureFile@1
+      name: cakey
+      displayName: 'Download CA private key'
+      inputs:
+        secureFile: 'rootCA.key'
+    - script: ls la
+      displayName: 'Checking again contents of folder'
