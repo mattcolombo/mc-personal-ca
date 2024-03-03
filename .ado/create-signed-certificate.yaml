@@ -75,3 +75,16 @@ stages:
       displayName: 'Add SANs to CNF file'
       env:
         SANS_JSON: ${{ convertToJson(parameters.sans) }}
+    
+    - task: Bash@3
+      name: run_script
+      displayName: 'Run script to generate the signed certificate'
+      inputs: 
+        filePath: ./create-signed-certificate.sh
+        arguments: ${{ parameters.cn }} ./openssl-srv.cnf ${{ variables.rootCAkeypass }}
+    
+    - script: |
+        ls -la 
+        ls -la ./certbundle-testexamplecom
+      displayName: 'Checking on results'
+      
