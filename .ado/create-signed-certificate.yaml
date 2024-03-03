@@ -30,7 +30,7 @@ stages:
     displayName: Sign and Upload Certificate
     variables:
     - group: rootCAvars
-    - name: rootCAkeypass
+    - name: rootCApass
       value: $[variables.rootCAkeypass]
     steps:
     - task: DownloadSecureFile@1
@@ -81,7 +81,9 @@ stages:
       displayName: 'Run script to generate the signed certificate'
       inputs: 
         filePath: ./create-signed-certificate.sh
-        arguments: ${{ parameters.cn }} ./openssl-srv.cnf ${{ variables.rootCAkeypass }}
+        arguments: ${{ parameters.cn }} ./openssl-srv.cnf $CAPASS
+      env:  
+        CAPASS: ${{ variables.rootCApass }}
     
     - script: |
         ls -la 
