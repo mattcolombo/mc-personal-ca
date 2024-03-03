@@ -53,6 +53,9 @@ stages:
         export CN=${{ parameters.cn }}
         export OU=${{ parameters.ou }}
         export ORG=${{ parameters.org }}
+        #export OUTDIR="./certbundle-$(echo $CN | tr -d '.')" # used later in the pipeline
+
+        echo "##vso[task.setvariable variable=OUTDIR]./certbundle-$(echo $CN | tr -d '.')"
 
         cp ./tmpl-openssl-srv.cnf ./openssl-srv.cnf 
         sed -i -e "s/##CN##/$CN/g" ./openssl-srv.cnf
@@ -72,6 +75,8 @@ stages:
         done
 
         cat ./openssl-srv.cnf
+
+        echo $(OUTDIR)
       displayName: 'Add SANs to CNF file'
       env:
         SANS_JSON: ${{ convertToJson(parameters.sans) }}
@@ -85,10 +90,6 @@ stages:
       env:  
         CAPASS: $(rootCApass)
     
-    - script: |
-        ls -la /home/vsts/
-        ls -la 
-        ls -la ./certbundle-testexamplecom
-        cat ./certbundle-testexamplecom/test.example.com.crt
-      displayName: 'Checking on results'
+    - publish: $(OUTDIR)
+      displayName: 'Uploading the bundle folder as artifact'
       
