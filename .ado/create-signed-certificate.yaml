@@ -33,7 +33,7 @@ stages:
     variables:
     - group: rootCAvars
     - name: rootCAkeypass
-      value: $[rootCAvars.rootCAkeypass]
+      value: $[variables.rootCAkeypass]
     steps:
     - script: ls -la
       displayName: 'Checking contents of folder'
