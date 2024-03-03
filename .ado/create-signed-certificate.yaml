@@ -23,12 +23,12 @@ parameters:
 ## Here we recover the secure vars and files for them to be available in the pipeline
 
 stages:
-- stage: sign-certificate
+- stage: sign_certificate
   displayName: Generate Signed Certificate
   pool:
     vmImage: ubuntu-latest
   jobs:
-  - job: sign-certificate 
+  - job: sign_certificate_job 
     displayName: Sign and Upload Certificate
     variables:
     - group: rootCA-vars
