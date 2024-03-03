@@ -31,7 +31,7 @@ stages:
   - job: sign_certificate_job 
     displayName: Sign and Upload Certificate
     variables:
-    - group: rootCA-vars
+    - group: rootCAvars
     - name: rootCAkeypass
       value: $[rootCAvars.rootCAkeypass]
     steps:
