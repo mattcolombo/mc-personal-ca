@@ -1,0 +1,34 @@
+trigger: none
+
+parameters:
+- name: org
+  type: string
+  displayName: "Organization [O]"
+  default: "MCCORP"
+- name: ou
+  type: string
+  displayName: "Organizational Unit [OU]"
+  default: "IT"
+- name: cn
+  type: string
+  displayName: "Common Name [CN]"
+  default: "test.example.com"
+- name: sans
+  type: object
+  displayName: "Subject Alternative Names [SANs]"
+  default:
+  - '*.example.com'
+  - '*.test.example.com'
+
+## Here we recover the secure vars and files for them to be available in the pipeline
+
+stages:
+- stage: sign-certificate
+  displayName: Generate Signed Certificate
+  pool:
+    vmImage: ubuntu-latest
+  jobs:
+  - template: /business_templates/ado-tl-release-confluent-operator-job.yaml
+    parameters: 
+      cfltEnv: ${{ parameters.cfltEnv }}
+      sourceDir: ${{ parameters.sourceDir }}
