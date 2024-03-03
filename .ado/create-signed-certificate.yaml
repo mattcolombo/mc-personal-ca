@@ -20,8 +20,6 @@ parameters:
   - '*.example.com'
   - '*.test.example.com'
 
-## Here we recover the secure vars and files for them to be available in the pipeline
-
 stages:
 - stage: sign_certificate
   displayName: Generate Signed Certificate
@@ -46,8 +44,31 @@ stages:
       inputs:
         secureFile: 'rootCA.key'
     - script: |
-        ls -la
-        ls -la ./rootCA
         cp $(cacrt.secureFilePath) ./rootCA/
+        cp $(cakey.secureFilePath) ./rootCA/
         ls -la ./rootCA
-      displayName: 'Checking contents of folder'
+        cat ./rootCA/rootCA.crt
+        cat ./rootCA/rootCA.key
+      displayName: 'Moving CA files to rootCA'
+    - script: |
+        export CN=${{ parameters.cn }}
+        export OU=${{ parameters.ou }}
+        export ORG=${{ parameters.org }}
+
+        cp ./tmpl-openssl-srv.cnf ./openssl-srv.cnf 
+        sed -i -e "s/##CN##/$CN/g" ./openssl-srv.cnf
+        sed -i -e "s/##OU##/$OU/g" ./openssl-srv.cnf
+        sed -i -e "s/##ORG##/$ORG/g" ./openssl-srv.cnf
+
+        ls -la 
+        cat ./openssl-srv.cnf
+      displayName: 'Preparing the CNF file'
+    - script: |
+        echo ${{ parameters.sans }}
+        export SANS=${{ parameters.sans }}
+        counter=1
+        for SAN in $SANS;
+        do 
+          counter++
+          echo "Printing each SAN at a time: DNS.$counter = $SAN"
+        done
