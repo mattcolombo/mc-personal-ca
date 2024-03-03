@@ -88,5 +88,6 @@ stages:
     - script: |
         ls -la 
         ls -la ./certbundle-testexamplecom
+        cat ./certbundle-testexamplecom/test.example.com.crt
       displayName: 'Checking on results'
       
