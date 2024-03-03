@@ -35,7 +35,7 @@ stages:
     - name: rootCAkeypass
       value: $[rootCA-vars.rootCAkeypass]
     steps:
-    - script: ls la
+    - script: ls -la
       displayName: 'Checking contents of folder'
     - task: DownloadSecureFile@1
       name: cacrt
@@ -47,5 +47,5 @@ stages:
       displayName: 'Download CA private key'
       inputs:
         secureFile: 'rootCA.key'
-    - script: ls la
+    - script: ls -la
       displayName: 'Checking again contents of folder'
