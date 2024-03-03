@@ -63,7 +63,8 @@ stages:
         cat ./openssl-srv.cnf
       displayName: 'Preparing the CNF file'
 
-    - ${{ each san in parameters.sans }}:
-      - script: |
-          echo "Printing each SAN at a time: DNS.? = $(san)"
-        displayName: 'Add SANs to CNF file'
+    - script: |
+        echo $SANS_JSON
+      displayName: 'Add SANs to CNF file'
+      env:
+        SANS_JSON: ${{ convertToJson(parameters.sans) }}
