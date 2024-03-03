@@ -47,7 +47,7 @@ stages:
         secureFile: 'rootCA.key'
     - script: |
         ls -la
-        la -la ./rootCA
+        ls -la ./rootCA
         cp $(cacrt.secureFilePath) ./rootCA/
-        la -la ./rootCA
+        ls -la ./rootCA
       displayName: 'Checking contents of folder'
