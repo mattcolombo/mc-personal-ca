@@ -64,7 +64,7 @@ stages:
         cat ./openssl-srv.cnf
       displayName: 'Preparing the CNF file'
     - script: |
-        echo ${{ parameters.sans }}
+        #echo ${{ parameters.sans }}
         export SANS=${{ parameters.sans }}
         counter=1
         for SAN in $SANS;
