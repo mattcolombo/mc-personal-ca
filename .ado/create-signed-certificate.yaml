@@ -65,9 +65,9 @@ stages:
       displayName: 'Preparing the CNF file'
     - script: |
         #echo ${{ parameters.sans }}
-        export SANS=${{ parameters.sans }}
+        #export SANS=${{ parameters.sans }}
         counter=1
-        for SAN in $SANS;
+        for SAN in ${{ parameters.sans }};
         do 
           counter++
           echo "Printing each SAN at a time: DNS.$counter = $SAN"
