@@ -83,7 +83,7 @@ stages:
         filePath: ./create-signed-certificate.sh
         arguments: ${{ parameters.cn }} ./openssl-srv.cnf $CAPASS
       env:  
-        CAPASS: ${{ variables.rootCApass }}
+        CAPASS: $(rootCApass)
     
     - script: |
         ls -la 
