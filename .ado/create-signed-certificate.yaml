@@ -29,7 +29,7 @@ stages:
     vmImage: ubuntu-latest
   jobs:
   - job: sign-certificate 
-    diplayName: Sign and Upload Certificate
+    displayName: Sign and Upload Certificate
     variables:
     - group: rootCA-vars
     - name: rootCAkeypass
