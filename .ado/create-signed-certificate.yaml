@@ -43,6 +43,7 @@ stages:
       displayName: 'Download CA private key'
       inputs:
         secureFile: 'rootCA.key'
+
     - script: |
         cp $(cacrt.secureFilePath) ./rootCA/
         cp $(cakey.secureFilePath) ./rootCA/
@@ -50,6 +51,7 @@ stages:
         cat ./rootCA/rootCA.crt
         cat ./rootCA/rootCA.key
       displayName: 'Moving CA files to rootCA'
+
     - script: |
         export CN=${{ parameters.cn }}
         export OU=${{ parameters.ou }}
@@ -63,12 +65,8 @@ stages:
         ls -la 
         cat ./openssl-srv.cnf
       displayName: 'Preparing the CNF file'
-    - script: |
-        #echo ${{ parameters.sans }}
-        #export SANS=${{ parameters.sans }}
-        counter=1
-        for SAN in ${{ parameters.sans }};
-        do 
-          counter++
-          echo "Printing each SAN at a time: DNS.$counter = $SAN"
-        done
+
+    - ${{ each san in parameters.sans }}:
+      - script: |
+          echo "Printing each SAN at a time: DNS.? = $san"
+        displayName: 'Add SANs to CNF file'
