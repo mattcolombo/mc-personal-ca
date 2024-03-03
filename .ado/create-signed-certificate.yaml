@@ -86,6 +86,7 @@ stages:
         CAPASS: $(rootCApass)
     
     - script: |
+        ls -la /home/vsts/
         ls -la 
         ls -la ./certbundle-testexamplecom
         cat ./certbundle-testexamplecom/test.example.com.crt
