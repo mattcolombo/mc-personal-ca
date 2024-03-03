@@ -64,11 +64,14 @@ stages:
       displayName: 'Preparing the CNF file'
 
     - script: |
-        echo $SANS_JSON
         export LEN=$(echo $SANS_JSON | jq length)
-        echo "length = $LEN"
 
-        for ((i = 0 ; i < "$LEN" ; i++ )); do echo "DNS.$(($i+2)) = $(echo $SANS_JSON | jq -r .[$i])"; done
+        for ((i = 0 ; i < "$LEN" ; i++ )); 
+        do 
+          echo "DNS.$(($i+2)) = $(echo $SANS_JSON | jq -r .[$i])" >> ./openssl-srv.cnf
+        done
+
+        cat ./openssl-srv.cnf
       displayName: 'Add SANs to CNF file'
       env:
         SANS_JSON: ${{ convertToJson(parameters.sans) }}
