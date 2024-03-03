@@ -21,7 +21,7 @@ The script [create-local-ca.sh](./rootCA/create-local-ca.sh) found in the [rootC
 
 To create your very own root certificate and key, simply follow these steps:
 
-* in the [rootCA](./rootCA/) folder, make a copy of the [tmpl-openssl-ca.cnf](./rootCA/tmpl-openssl-ca.cnf) file and name it `openssl-ca.cnf`;
+* in the [rootCA](./rootCA/) folder, make a copy of the [tmpl-openssl-ca.cnf](./rootCA/tmpl-openssl-ca.cnf) file and name it `openssl-ca.cnf`. This will replace the one already present containing the defaults for my own local CA;
 * open the newly created `openssl-ca.cnf` file and change the default values in the `[ ca_distinguished_name ]`. The values to change are the ones surrounded by `##`;
 * run the [create-local-ca.sh](./rootCA/create-local-ca.sh). 
 
@@ -34,7 +34,7 @@ The output of the script is going to all be located in the [rootCA](./rootCA/):
 At this point, if the certificates that will be generated with this local CA are going to be used locally for testing, it may be a good idea to add the `rootCA.crt` to your local truststore (e.g. the trusted root certificates in Windows, or whatever flavour of truststore your application or system is using). This will make sure that any certificates you will generate from here onwards will be trusted by your system or application and thus avoid TLS errors (or annoying messages in your browser about untrusted pages).
 
 > [!TIP]
-> The `openssl-ca.cnf` file created in the first step must be kept for the future: not only this is the reference file for your own CA, but it will also be used when signing new certificates. Note that even if you are using this repo (e.g. a fork of the original) the `.gitignore` file is already taking care to not commit the root certificates keys, passwords and the specific config files (such as `openssl-ca.cnf`) used in your own specific CA. So you are safe to keep all of it there.
+> The `openssl-ca.cnf` file created in the first step must be kept for the future: not only this is the reference file for your own CA, but it will also be used when signing new certificates. Note that even if you are using this repo (e.g. a fork of the original) the `.gitignore` file is already taking care to not commit the root certificate, key and password. So you are safe to keep all of it there. The configuration file is actually committed (for ease of use in the automation) hence if you prefer to avoid doing so, please simply add it to the `.gitignore` file.
 
 ## Generating signed certificates manually
 
