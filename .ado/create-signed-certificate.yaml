@@ -68,7 +68,7 @@ stages:
         export LEN=$(echo $SANS_JSON | jq length)
         echo "length = $LEN"
 
-        for ((i = 0 ; i < "$LEN" ; i++ )); do echo "DNS.$i = $(echo $SANS_JSON | jq -r .[$i])"; done
+        for ((i = 0 ; i < "$LEN" ; i++ )); do echo "DNS.$(($i+2)) = $(echo $SANS_JSON | jq -r .[$i])"; done
       displayName: 'Add SANs to CNF file'
       env:
         SANS_JSON: ${{ convertToJson(parameters.sans) }}
