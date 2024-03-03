@@ -47,9 +47,6 @@ stages:
     - script: |
         cp $(cacrt.secureFilePath) ./rootCA/
         cp $(cakey.secureFilePath) ./rootCA/
-        ls -la ./rootCA
-        cat ./rootCA/rootCA.crt
-        cat ./rootCA/rootCA.key
       displayName: 'Moving CA files to rootCA'
 
     - script: |
@@ -68,5 +65,5 @@ stages:
 
     - ${{ each san in parameters.sans }}:
       - script: |
-          echo "Printing each SAN at a time: DNS.? = $san"
+          echo "Printing each SAN at a time: DNS.? = $(san)"
         displayName: 'Add SANs to CNF file'
