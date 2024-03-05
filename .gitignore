@@ -1,0 +1,14 @@
+# don't commit CA files
+rootCA/rootCA.crt
+rootCA/rootCA.key
+rootCA/rootCA-keypass.txt
+
+# don't commit sample CFN files
+openssl-srv*
+
+# don't commit generated assets
+certbundle*
+
+#don't commit db assets aside from the required ones
+db/index.txt.*
+db/serial.txt.*

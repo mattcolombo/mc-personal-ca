@@ -1,1 +1,93 @@
-##TBC
+trigger: none
+
+parameters:
+- name: org
+  type: string
+  displayName: "Organization [O]"
+  default: "MCCORP"
+- name: ou
+  type: string
+  displayName: "Organizational Unit [OU]"
+  default: "IT"
+- name: cn
+  type: string
+  displayName: "Common Name [CN]"
+  default: "test.example.com"
+- name: sans
+  type: object
+  displayName: "Subject Alternative Names [SANs]"
+  default:
+  - '*.example.com'
+  - '*.test.example.com'
+
+stages:
+- stage: sign_certificate
+  displayName: Generate Signed Certificate
+  pool:
+    vmImage: ubuntu-latest
+  jobs:
+  - job: sign_certificate_job 
+    displayName: Sign and Upload Certificate
+    variables:
+    - group: rootCAvars
+    - name: rootCApass
+      value: $[variables.rootCAkeypass]
+    steps:
+    - task: DownloadSecureFile@1
+      name: cacrt
+      displayName: 'Download CA root certificate'
+      inputs:
+        secureFile: 'rootCA.crt'
+    - task: DownloadSecureFile@1
+      name: cakey
+      displayName: 'Download CA private key'
+      inputs:
+        secureFile: 'rootCA.key'
+
+    - script: |
+        cp $(cacrt.secureFilePath) ./rootCA/
+        cp $(cakey.secureFilePath) ./rootCA/
+      displayName: 'Moving CA files to rootCA'
+
+    - script: |
+        export CN=${{ parameters.cn }}
+        export OU=${{ parameters.ou }}
+        export ORG=${{ parameters.org }}
+        
+        # exporting the value of the output directory for the generated certificates. This will be used in the last step
+        echo "##vso[task.setvariable variable=OUTDIR]certbundle-$(echo $CN | tr -d '.')"
+
+        cp ./tmpl-openssl-srv.cnf ./openssl-srv.cnf 
+        sed -i -e "s/##CN##/$CN/g" ./openssl-srv.cnf
+        sed -i -e "s/##OU##/$OU/g" ./openssl-srv.cnf
+        sed -i -e "s/##ORG##/$ORG/g" ./openssl-srv.cnf
+
+        cat ./openssl-srv.cnf
+      displayName: 'Preparing the CNF file'
+
+    - script: |
+        export LEN=$(echo $SANS_JSON | jq length)
+
+        for ((i = 0 ; i < "$LEN" ; i++ )); 
+        do 
+          echo "DNS.$(($i+2)) = $(echo $SANS_JSON | jq -r .[$i])" >> ./openssl-srv.cnf
+        done
+
+        cat ./openssl-srv.cnf
+      displayName: 'Add SANs to CNF file'
+      env:
+        SANS_JSON: ${{ convertToJson(parameters.sans) }}
+    
+    - task: Bash@3
+      name: run_script
+      displayName: 'Run script to generate the signed certificate'
+      inputs: 
+        filePath: ./create-signed-certificate.sh
+        arguments: ${{ parameters.cn }} ./openssl-srv.cnf $CAPASS
+      env:  
+        CAPASS: $(rootCApass)
+    
+    - publish: ./$(OUTDIR)
+      artifact: $(OUTDIR)
+      displayName: 'Uploading the bundle folder as artifact'
+      

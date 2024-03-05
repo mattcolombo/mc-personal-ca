@@ -58,3 +58,6 @@ jobs:
           name: ${{ inputs.cn }}-bundle
           path: ./certbundle
 ```
+
+> [!CAUTION]
+> The above pipeline is provided only as an example, and the script used there is an older version. Hence, for this to work with the current version of the scripts it would need to be adapted. Please refer to the Azure DevOps pipeline logic for the more up to date version.

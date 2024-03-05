@@ -1,0 +1,42 @@
+[ req ]
+default_bits       = 2048
+default_keyfile    = ##CN##.key
+distinguished_name = server_distinguished_name
+req_extensions     = server_req_extensions
+string_mask        = utf8only
+
+####################################################################
+[ server_distinguished_name ]
+countryName         = Country Name (2 letter code)
+countryName_default = GB
+
+stateOrProvinceName         = State or Province Name (full name)
+stateOrProvinceName_default = Midlands
+
+localityName         = Locality Name (eg, city)
+localityName_default = Leics
+
+organizationName            = Organization Name (eg, company)
+organizationName_default    = ##ORG##
+
+organizationalUnitName         = Organizational Unit (eg, division)
+organizationalUnitName_default = ##OU##
+
+commonName           = Common Name (e.g. server FQDN or YOUR name)
+commonName_default   = ##CN##
+
+####################################################################
+[ server_req_extensions ]
+
+subjectKeyIdentifier = hash
+basicConstraints     = CA:FALSE
+keyUsage             = digitalSignature, keyEncipherment
+subjectAltName       = @alternate_names
+nsComment            = "OpenSSL Generated Certificate"
+
+####################################################################
+[ alternate_names ]
+
+# add below the list of alternate names as 
+# DNS.# = <hostname>
+DNS.1 = ##CN##
