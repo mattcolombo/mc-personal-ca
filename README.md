@@ -71,16 +71,32 @@ This was done this way since this whole process is meant to be used locally and 
 
 Additionally in this case, more care would need to be taken in how to store and manage the root certificate, private keys and most importantly passwords.
 
-## Automation of the certificate signing process  --  TBC
+## Automation of the certificate signing process
+
+In this last section, we talk about how this process can be automated. My own personal automation is hosted in an Azure DevOps private Organisation. That's simply because I generally prefer ADO Pipelines over GitHub Actions (I find them more flexible and powerful; also I am more familiar with them). However, this does not mean ADO is the only way to automate this process. In fact any tool that is capable of running bash commands will work just as well, since most of the logic is self-contained in the [create-signed-certificate.sh](./create-signed-certificate.sh) script. In fact the first iteration of the automation I wrote was for GitHub actions. This initial automation is explained in [this document](./doc/GH-Actions.md); note that this was created for an older and simpler version of the script, so to work with the current version it would need to be adapted somewhat. The main structure would still be the same though. 
+
+Below the steps to recreate the automation for ADO contained in [this pipeline file](./.ado/create-signed-certificate.yaml) is described in more detail.
 
 ### Prerequisites
 
-* Create a new variable group in the ADO pipeline library and add a secret variable with the password for the CA private key
-* Add the root certificate and private key as secure files in the ADO pipeline library
+Before setting up our automation, we need to take care of a few prerequisites. 
 
-### The actual pipeline
+First we need to create a root certificate and key. For this we can simply use the script described in the [section above](#generating-the-root-certificate-and-key). This has not been automated since it is mostly a one time activity (or better, one that will only need to happen once every couple of years, 1024 days to be precise).
 
-[this pipeline file](./.ado/create-signed-certificate.yaml)
+Next we need to provide the root certificate, key and key password to the automation tool of choice in the most secure way possible. In the case of ADO this was obtained in the following way:
 
-> [!NOTE]
-> The automation presented above can be implemented easily with any other automation tool that supports running a bash script, since most of the logic is self-contained in the [create-signed-certificate.sh](./create-signed-certificate.sh) script. An example of how this could look in GitHub Actions is provided in [this document](./doc/GH-Actions.md); note that this was created for an older and simpler version of the script, so to work with the current version it would need to be adapted somewhat. The main structure would still be the same though.
+* create a new variable group named `rootCAvars` in the ADO pipeline library and add a secret variable named `rootCAkeypass` containing the password for the CA private key
+* Add the root certificate and private key as secure files `rootCA.crt` and `rootCA.key` in the ADO pipeline library
+
+> [!TIP]
+> Using the names as given above will allow to use the pipeline file [create-signed-certificate.yaml](./.ado/create-signed-certificate.yaml) directly as it is. If these names are changed, the pipeline code will need to be updated to reflect this (on lines 32,34 for the secure variable, and 40,45 for the secure files).
+
+### Setting up the pipeline
+
+Provided the instructions above have been followed to the letter, the pipeline file [create-signed-certificate.yaml](./.ado/create-signed-certificate.yaml) can be used directly to create a pipeline in ADO. To do so, create a new pipeline, give as source the repository where the code is stored, and select the existing pipeline file. Once created, at the first run the pipeline will need to be authorized to access the variable group and secure files (see the [prerequisites](#prerequisites) section for the details).
+
+This pipeline is only triggered manually, since the process for creating the certificate would happen only on demand, and will use as reference the configuration files [tmpl-openssl-srv.cnf](./tmpl-openssl-srv.cnf) and `openssl-ca.cnf` file created when generating the root certificate and key. As explained above for the script to work correctly the folder structure of this repository must be preserved. Any changes must be reflected in the script and in the configuration files. 
+
+The pipeline when triggered takes as input the `Organisation`, `Organisational Unit` and `Common Name` for the certificate to be created. The `Country`, `State` and `Locality` are hard-coded in the template configuration file [tmpl-openssl-srv.cnf](./tmpl-openssl-srv.cnf) since they will generally remain the same for any certificates requested as personal testing certificates. If this need to change based on requirement, make sure to update the template configuration file. In my case these values are the same that were also used for the root certificate, but they need not be the same in general.
+
+Once the pipeline has been run, a pipeline artifact will be available for download in the pipeline results screen. The downloadable bundle contains (as described at the end of [this section](#generating-signed-certificates-manually)) the certificate and private key in PEM format, the certificate+private key in PKCS12 format and the password for the latter. Simply download the bundle and distribute/use the certificates as required.
